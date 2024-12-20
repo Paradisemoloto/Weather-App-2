@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <div class="cell" id="cell-0"></div>
+    <div class="cell" id="cell-1"></div>
+    <div class="cell" id="cell-2"></div>
+    <div class="cell" id="cell-3"></div>
+    <div class="cell" id="cell-4"></div>
+    <div class="cell" id="cell-5"></div>
+    <div class="cell" id="cell-6"></div>
+    <div class="cell" id="cell-7"></div>
+    <div class="cell" id="cell-8"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+<ALOASK-SEPARATE-EDITORS>
+
+.game-container {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 6px;
+}
+
+.cell {
+  border: 1px solid black;
+  text-align: center;
+  font-size: 40px;
+  cursor: pointer;
+}
+<ALOASK-SEPARATE-EDITORS>
+const cells = document.querySelectorAll('.cell');
+let currentPlayer = 'X';
+let gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+// Function to check for a win
+function checkWin() {
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  for (let i = 0; i < winConditions.length; i++) {
+    const [a, b, c] = winConditions[i];
+    if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+      return gameBoard[a];
+    }
+  }
+
+  return null;
+}
+
+// Function for AI to make a move
+function aiMove() {
+  // Implement a simple AI strategy (e.g., random move or a basic strategy)
+  let emptyCells = [];
+  for (let i = 0; i < 9; i++) {
+    if (gameBoard[i] === '') {
+      emptyCells.push(i);
+    }
+  }
+
+  const randomIndex = Math.floor(Math.random() * emptyCells.length);
+  const aiChoice = emptyCells[randomIndex];
+  gameBoard[aiChoice] = 'O';
+  cells[aiChoice].textContent = 'O';
+  currentPlayer = 'X';
+}
+
+// Function to handle user clicks
+cells.forEach((cell, index) => {
+  cell.addEventListener('click', () => {
+    if (gameBoard[index] === '') {
+      gameBoard[index] = currentPlayer;
+      cell.textContent = currentPlayer;
+
+      const winner = checkWin();
+      if (winner) {
+        alert(`${winner} wins!`);
+        resetGame();
+      } else if (gameBoard.every(cell => cell !== '')) {
+        alert('It\'s a tie!');
+        resetGame();
+      } else {
+        currentPlayer = 'O';
+        aiMove();
+      }
+    }
+  });
+});
+
+// Function to reset the game
+function resetGame() {
+  gameBoard = ['', '', '', '', '', '', '', '', ''];
+  cells.forEach(cell => {
+    cell.textContent = '';
+  });
+  currentPlayer = 'X';
+}
